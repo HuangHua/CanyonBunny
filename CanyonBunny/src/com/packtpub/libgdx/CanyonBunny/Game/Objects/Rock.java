@@ -1,5 +1,6 @@
 package com.packtpub.libgdx.CanyonBunny.Game.Objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.packtpub.libgdx.CanyonBunny.Game.Assets;
@@ -23,6 +24,9 @@ public class Rock extends AbstractGameObject {
 	
 	public void setLength(int length) {
 		this.length = length;
+		// update bounding box for collision detection
+		bounds.set(0, 0, length, dimension.y);
+		Gdx.app.debug("Rock", "dimension: (" + dimension.x + ", " + dimension.y + ")");
 	}
 	
 	public void increaseLength(int amount) {
