@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Disposable;
@@ -21,6 +22,30 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetGoldCoin goldCoin;
 	public AssetFeather feather;
 	public AssetLevelDecoration levelDecoration;
+	public AssetFonts fonts;
+	
+	public class AssetFonts {
+		public final BitmapFont defaultSmall;
+		public final BitmapFont defaultNormal;
+		public final BitmapFont defaultBig;
+		
+		public AssetFonts() {
+			// Create three fonts using libGdx's 15px bitmap font
+			defaultSmall = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
+			defaultNormal = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
+			defaultBig = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
+			
+			// set font sizes
+			defaultSmall.setScale(0.75f);
+			defaultNormal.setScale(1.0f);
+			defaultBig.setScale(2.0f);
+			
+			// enable linear texture filtering for smooth fonts
+			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		}
+	}
 	
 	// Singleton: prevent initialization from other classes
 	private Assets() {
@@ -47,11 +72,16 @@ public class Assets implements Disposable, AssetErrorListener {
 		goldCoin = new AssetGoldCoin(atlas);
 		feather = new AssetFeather(atlas);
 		levelDecoration = new AssetLevelDecoration(atlas);
+		
+		fonts = new AssetFonts();
 	}
 
 	@Override
 	public void dispose() {
 		assetManager.dispose();
+		fonts.defaultBig.dispose();
+		fonts.defaultNormal.dispose();
+		fonts.defaultSmall.dispose();
 	}
 
 	@Override
@@ -105,9 +135,9 @@ public class Assets implements Disposable, AssetErrorListener {
 			cloud01 = atlas.findRegion("cloud01");
 			cloud02 = atlas.findRegion("cloud02");
 			cloud03 = atlas.findRegion("cloud03");
-			mountainLeft = atlas.findRegion("mountainLeft");
-			mountainRight = atlas.findRegion("mountainRight");
-			waterOverlay = atlas.findRegion("waterOverlay");
+			mountainLeft = atlas.findRegion("mountain_left");
+			mountainRight = atlas.findRegion("mountain_right");
+			waterOverlay = atlas.findRegion("water_overlay");
 		}
 	}
 }
