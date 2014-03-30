@@ -20,15 +20,15 @@ public class Main {
 	public static void main(String[] args) {
 		if(rebuildAltas) {
 			// delete the packed file first if exists
-			deleteFile("../CanyonBunny/images/canyonBunny.pack");
-			deleteFile("../CanyonBunny/images/canyonBunny.png");
+			deleteFile("../CanyonBunny-android/assets/images/canyonBunny.pack");
+			deleteFile("../CanyonBunny-android/assets/images/canyonBunny.png");
 			// Pack the images
 			Settings settings = new Settings();
 			settings.maxHeight = 1024;
 			settings.maxWidth = 1024;
 			settings.debug = drawDebugOutline;
 			TexturePacker.process(settings, "assets-raw/images",
-					"../CanyonBunny/images", "canyonbunny.pack");
+					"../CanyonBunny-android/assets/images", "canyonbunny.pack");
 		}
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
