@@ -26,7 +26,7 @@ public class Rock extends AbstractGameObject {
 		this.length = length;
 		// update bounding box for collision detection
 		bounds.set(0, 0, length, dimension.y);
-		Gdx.app.debug("Rock", "dimension: (" + dimension.x + ", " + dimension.y + ")");
+		//Gdx.app.debug("Rock", "dimension: (" + dimension.x + ", " + dimension.y + ")");
 	}
 	
 	public void increaseLength(int amount) {
