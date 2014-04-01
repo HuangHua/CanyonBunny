@@ -10,7 +10,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 public class Main {
 	
-	private static boolean rebuildAltas = true;
+	private static boolean rebuildAltas = false;
 	private static boolean drawDebugOutline = false;
 	
 	private static void deleteFile(String filename) {

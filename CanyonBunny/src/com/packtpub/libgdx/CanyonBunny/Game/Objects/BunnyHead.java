@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.packtpub.libgdx.CanyonBunny.Game.Assets;
+import com.packtpub.libgdx.CanyonBunny.Util.CharactorSkin;
 import com.packtpub.libgdx.CanyonBunny.Util.Constants;
+import com.packtpub.libgdx.CanyonBunny.Util.GamePreferences;
 
 public class BunnyHead extends AbstractGameObject {
 	public static final String TAG = BunnyHead.class.getName();
@@ -134,6 +136,8 @@ public class BunnyHead extends AbstractGameObject {
 	@Override
 	public void render(SpriteBatch batch) {
 		TextureRegion reg = null;
+		// Apply Skin Color
+		batch.setColor(CharactorSkin.values()[GamePreferences.instance.charSkin].getColor());
 		// set special color when game object has feather power-up
 		if(hasFeatherPowerup)
 			batch.setColor(1.0f, 0.8f, 0, 1);

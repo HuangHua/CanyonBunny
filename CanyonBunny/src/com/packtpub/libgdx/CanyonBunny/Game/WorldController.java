@@ -1,5 +1,6 @@
 package com.packtpub.libgdx.CanyonBunny.Game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -16,6 +17,7 @@ import com.packtpub.libgdx.CanyonBunny.Game.Objects.BunnyHead.JUMP_STATE;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.Feather;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.GoldCoin;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.Rock;
+import com.packtpub.libgdx.CanyonBunny.Screens.MenuScreen;
 import com.packtpub.libgdx.CanyonBunny.Util.CameraHelper;
 import com.packtpub.libgdx.CanyonBunny.Util.Constants;
 
@@ -26,6 +28,12 @@ public class WorldController extends InputAdapter {
 	public int lives;
 	public int score;
 	private float timeLeftGameOverDelay;
+	private Game game;
+	
+	private void backToMenu() {
+		// switch to main menu
+		game.setScreen(new MenuScreen(game));
+	}
 	
 	public boolean isGameOver() {
 		return lives < 0;
@@ -41,8 +49,9 @@ public class WorldController extends InputAdapter {
 		cameraHelper.setTarget(level.bunnyHead);
 	}
 	
-	public WorldController()
+	public WorldController(Game game)
 	{
+		this.game = game;
 		init();
 	}
 	
