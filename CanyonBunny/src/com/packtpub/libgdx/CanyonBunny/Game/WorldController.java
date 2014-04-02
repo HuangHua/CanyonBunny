@@ -29,6 +29,8 @@ public class WorldController extends InputAdapter {
 	public int score;
 	private float timeLeftGameOverDelay;
 	private Game game;
+	public float livesVisual;
+	public float scoreVisual;
 	
 	private void backToMenu() {
 		// switch to main menu
@@ -45,6 +47,7 @@ public class WorldController extends InputAdapter {
 	
 	private void initLevel() {
 		score = 0; 
+		scoreVisual = score;
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.bunnyHead);
 	}
@@ -60,6 +63,7 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
+		livesVisual = lives;
 		timeLeftGameOverDelay = 0;
 		initLevel();
 	}
@@ -70,7 +74,7 @@ public class WorldController extends InputAdapter {
 		if(isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime;
 			if(timeLeftGameOverDelay < 0) {
-				init();
+				backToMenu();
 			}
 		} else {
 			handleInputGame(deltaTime);
@@ -85,7 +89,13 @@ public class WorldController extends InputAdapter {
 			else
 				initLevel();
 		}
-		
+		level.mountains.updateScrollPosition(cameraHelper.getPosition());
+		if(livesVisual > lives) {
+			livesVisual = Math.max(lives, livesVisual - 1*deltaTime);
+		}
+		if(scoreVisual < score) {
+			scoreVisual = Math.min(score, scoreVisual + 250*deltaTime);
+		}
 	}
 	
 	private void handleInputGame(float deltaTime) {

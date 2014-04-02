@@ -3,6 +3,7 @@ package com.packtpub.libgdx.CanyonBunny.Game.Objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.packtpub.libgdx.CanyonBunny.Game.Assets;
 
 public class Mountains extends AbstractGameObject {
@@ -23,16 +24,20 @@ public class Mountains extends AbstractGameObject {
         origin.x = -dimension.x * 2;
         length += dimension.x * 2;
     }
+    
+    public void updateScrollPosition(Vector2 camPosition) {
+    	position.set(camPosition.x, camPosition.y);
+    }
 
     private void drawMountain(SpriteBatch batch, float offsetX, float offsetY,
-            float tintColor) {
+            float tintColor, float parallaxSpeedX) {
         TextureRegion reg = null;
         batch.setColor(tintColor, tintColor, tintColor, 1);
         float xRel = dimension.x * offsetX;
         float yRel = dimension.y * offsetY;
         // mountains span the whole level
         int mountainLength = 0;
-        mountainLength += MathUtils.ceil(length / (2 * dimension.x));
+        mountainLength += MathUtils.ceil(length / (2 * dimension.x) * (1 - parallaxSpeedX));
         mountainLength += MathUtils.ceil(0.5f + offsetX);
         for (int i = 0; i < mountainLength; i++) {
             // mountain left
@@ -59,10 +64,10 @@ public class Mountains extends AbstractGameObject {
     @Override
     public void render(SpriteBatch batch) {
         // distant mountains (dark gray)
-        drawMountain(batch, 0.5f, 0.5f, 0.5f);
+        drawMountain(batch, 0.5f, 0.5f, 0.5f, 0.8f);
         // distant mountains (gray)
-        drawMountain(batch, 0.25f, 0.25f, 0.7f);
+        drawMountain(batch, 0.25f, 0.25f, 0.7f, 0.5f);
         // distant mountains (light gray)
-        drawMountain(batch, 0.0f, 0.0f, 0.9f);
+        drawMountain(batch, 0.0f, 0.0f, 0.9f, 0.3f);
     }
 }
