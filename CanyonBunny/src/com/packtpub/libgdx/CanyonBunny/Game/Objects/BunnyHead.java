@@ -1,6 +1,7 @@
 package com.packtpub.libgdx.CanyonBunny.Game.Objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.packtpub.libgdx.CanyonBunny.Game.Assets;
@@ -27,6 +28,7 @@ public class BunnyHead extends AbstractGameObject {
 	public JUMP_STATE jumpState;
 	public boolean hasFeatherPowerup;
 	public float timeLeftFeatherPowerup;
+	public ParticleEffect dustParticles = new ParticleEffect();
 	
 	public BunnyHead() {
 		init();
@@ -51,7 +53,9 @@ public class BunnyHead extends AbstractGameObject {
 		// power-ups
 		hasFeatherPowerup = false;
 		timeLeftFeatherPowerup = 0;
-		
+		// particles
+		dustParticles.load(Gdx.files.internal("particles/dust.pfx"), 
+				Gdx.files.internal("particles"));
 	}
 	
 	public void setJumping(boolean jumpKeyPressed) {
@@ -102,6 +106,7 @@ public class BunnyHead extends AbstractGameObject {
     			setFeatherPowerup(false);
     		}
     	}
+    	dustParticles.update((float)deltaTime);
     }
     
     @Override
@@ -109,6 +114,10 @@ public class BunnyHead extends AbstractGameObject {
         switch (jumpState) {
         case GROUNDED:
             jumpState = JUMP_STATE.FALLING;
+            if(velocity.x != 0) {
+            	dustParticles.setPosition(position.x+dimension.x/2, position.y);
+            	dustParticles.start();
+            }
             break;
         case JUMP_RISING:
             // Keep track of jump time
@@ -129,13 +138,17 @@ public class BunnyHead extends AbstractGameObject {
                 velocity.y = -terminalVelocity.y;
             }
         }
-        if (jumpState != JUMP_STATE.GROUNDED)
+        if (jumpState != JUMP_STATE.GROUNDED) {
+        	dustParticles.allowCompletion();
             super.updateMotionY(deltaTime);
+        }
     }
 
 	@Override
 	public void render(SpriteBatch batch) {
 		TextureRegion reg = null;
+		// Draw particles
+		dustParticles.draw(batch);
 		// Apply Skin Color
 		batch.setColor(CharactorSkin.values()[GamePreferences.instance.charSkin].getColor());
 		// set special color when game object has feather power-up
