@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -17,7 +18,11 @@ import com.packtpub.libgdx.CanyonBunny.Game.Objects.BunnyHead.JUMP_STATE;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.Feather;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.GoldCoin;
 import com.packtpub.libgdx.CanyonBunny.Game.Objects.Rock;
+import com.packtpub.libgdx.CanyonBunny.Screens.DirectedGame;
 import com.packtpub.libgdx.CanyonBunny.Screens.MenuScreen;
+import com.packtpub.libgdx.CanyonBunny.Screens.Transitions.ScreenTransition;
+import com.packtpub.libgdx.CanyonBunny.Screens.Transitions.ScreenTransitionSlide;
+import com.packtpub.libgdx.CanyonBunny.Util.AudioManager;
 import com.packtpub.libgdx.CanyonBunny.Util.CameraHelper;
 import com.packtpub.libgdx.CanyonBunny.Util.Constants;
 
@@ -28,13 +33,15 @@ public class WorldController extends InputAdapter {
 	public int lives;
 	public int score;
 	private float timeLeftGameOverDelay;
-	private Game game;
+	private DirectedGame game;
 	public float livesVisual;
 	public float scoreVisual;
 	
 	private void backToMenu() {
+		ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+				ScreenTransitionSlide.DOWN, false, Interpolation.bounceOut);
 		// switch to main menu
-		game.setScreen(new MenuScreen(game));
+		game.setScreen(new MenuScreen(game), transition);
 	}
 	
 	public boolean isGameOver() {
@@ -52,7 +59,7 @@ public class WorldController extends InputAdapter {
 		cameraHelper.setTarget(level.bunnyHead);
 	}
 	
-	public WorldController(Game game)
+	public WorldController(DirectedGame game)
 	{
 		this.game = game;
 		init();
@@ -60,7 +67,6 @@ public class WorldController extends InputAdapter {
 	
 	private void init()
 	{
-		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
 		livesVisual = lives;
@@ -83,6 +89,7 @@ public class WorldController extends InputAdapter {
 		testCollisions();
 		cameraHelper.update(deltaTime);
 		if(!isGameOver() && isPlayerInWater()) {
+			AudioManager.instance.play(Assets.instance.sounds.liveLost);
 			lives--;
 			if(isGameOver())
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
@@ -228,12 +235,14 @@ public class WorldController extends InputAdapter {
 
     private void onCollisionBunnyWithGoldCoin(GoldCoin goldcoin) {
     	goldcoin.collected = true;
+    	AudioManager.instance.play(Assets.instance.sounds.pickupCoin);
         score += goldcoin.getScore();
         Gdx.app.log(TAG, "Gold coin collected");
     };
 
     private void onCollisionBunnyWithFeather(Feather feather) {
     	feather.collected = true;
+    	AudioManager.instance.play(Assets.instance.sounds.pickupFeather);
         score += feather.getScore();
         level.bunnyHead.setFeatherPowerup(true);
         Gdx.app.log(TAG, "Feather collected");

@@ -2,9 +2,11 @@ package com.packtpub.libgdx.CanyonBunny.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -21,6 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.packtpub.libgdx.CanyonBunny.Game.Assets;
+import com.packtpub.libgdx.CanyonBunny.Screens.Transitions.ScreenTransition;
+import com.packtpub.libgdx.CanyonBunny.Screens.Transitions.ScreenTransitionFade;
+import com.packtpub.libgdx.CanyonBunny.Screens.Transitions.ScreenTransitionSlide;
+import com.packtpub.libgdx.CanyonBunny.Util.AudioManager;
 import com.packtpub.libgdx.CanyonBunny.Util.CharactorSkin;
 import com.packtpub.libgdx.CanyonBunny.Util.Constants;
 import com.packtpub.libgdx.CanyonBunny.Util.GamePreferences;
@@ -143,7 +149,8 @@ public class MenuScreen extends AbstractGameScreen {
 	}
 
 	private void onPlayClicked() {
-		game.setScreen(new GameScreen(game));
+		ScreenTransition transition = ScreenTransitionFade.init(0.75f);
+		game.setScreen(new GameScreen(game), transition);
 	}
 	
 	private void onOptionsClicked() {
@@ -280,7 +287,7 @@ public class MenuScreen extends AbstractGameScreen {
         return tbl;
     }
     
-	public MenuScreen(Game game) {
+	public MenuScreen(DirectedGame game) {
 		super(game);
 	}
 
@@ -309,7 +316,6 @@ public class MenuScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
 		GamePreferences.instance.load();
 	}
@@ -371,11 +377,18 @@ public class MenuScreen extends AbstractGameScreen {
 	private void onSaveClicked() {
 		saveSettings();
 		onCancelClicked();
+		AudioManager.instance.onSettingsUpdated();
 	}
 	
 	private void onCancelClicked() {
 		btnMenuPlay.setVisible(true);
 		btnMenuOptions.setVisible(true);
 		winOptions.setVisible(false);
+		AudioManager.instance.onSettingsUpdated();
+	}
+
+	@Override
+	public InputProcessor getInputProcessor() {
+		return stage;
 	}
 }

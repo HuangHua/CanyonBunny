@@ -2,6 +2,7 @@ package com.packtpub.libgdx.CanyonBunny.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.packtpub.libgdx.CanyonBunny.Game.WorldController;
 import com.packtpub.libgdx.CanyonBunny.Game.WorldRenderer;
@@ -13,7 +14,7 @@ public class GameScreen extends AbstractGameScreen {
 	private WorldRenderer worldRenderer;
 	private boolean paused;
 	
-	public GameScreen(Game game) {
+	public GameScreen(DirectedGame game) {
 		super(game);
 	}
 
@@ -63,5 +64,10 @@ public class GameScreen extends AbstractGameScreen {
         // Only called on Android!
         paused = false;
     }
+
+	@Override
+	public InputProcessor getInputProcessor() {
+		return worldController;
+	}
 
 }
