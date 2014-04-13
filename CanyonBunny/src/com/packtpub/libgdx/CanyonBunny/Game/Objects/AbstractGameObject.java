@@ -1,9 +1,11 @@
 package com.packtpub.libgdx.CanyonBunny.Game.Objects;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public abstract class AbstractGameObject {
 	public Vector2 position;
@@ -16,7 +18,10 @@ public abstract class AbstractGameObject {
 	public Vector2 friction;
 	public Vector2 acceleration;
 	public Rectangle bounds;
-	
+	public Body body;
+	public float stateTime;
+    public Animation animation;
+
 	public AbstractGameObject() {
 		position = new Vector2();
 		dimension = new Vector2(1, 1);
@@ -30,12 +35,23 @@ public abstract class AbstractGameObject {
 		bounds = new Rectangle();
 	}
 	
+	public void setAnimation(Animation animation) {
+        this.animation = animation;
+        stateTime = 0;
+    }
+
 	public void update(double deltaTime) {
-		updateMotionX(deltaTime);
-		updateMotionY(deltaTime);
-		// move to new position
-		position.x += velocity.x * deltaTime;
-		position.y += velocity.y * deltaTime;
+		stateTime += deltaTime;
+		if(body == null) {
+			updateMotionX(deltaTime);
+			updateMotionY(deltaTime);
+			// move to new position
+			position.x += velocity.x * deltaTime;
+			position.y += velocity.y * deltaTime;
+		} else {
+			position.set(body.getPosition());
+			rotation = body.getAngle() * MathUtils.radiansToDegrees;
+		}
 	}
 	
 	public abstract void render(SpriteBatch batch);

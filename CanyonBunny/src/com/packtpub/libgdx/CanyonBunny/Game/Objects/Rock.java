@@ -1,6 +1,5 @@
 package com.packtpub.libgdx.CanyonBunny.Game.Objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -36,7 +35,7 @@ public class Rock extends AbstractGameObject {
 	public void setLength(int length) {
 		this.length = length;
 		// update bounding box for collision detection
-		bounds.set(0, 0, length, dimension.y);
+		bounds.set(0, 0, length*dimension.x, dimension.y);
 		//Gdx.app.debug("Rock", "dimension: (" + dimension.x + ", " + dimension.y + ")");
 	}
 	
@@ -86,8 +85,11 @@ public class Rock extends AbstractGameObject {
 		if(floatCycleTimeLeft <= 0) {
 			floatCycleTimeLeft = FLOAT_CYCLE_TIME;
 			floatingDownwards = !floatingDownwards;
-			floatTargetPosition.y += FLOAT_AMPLITUDE * (floatingDownwards ? -1 : 1);
+			body.setLinearVelocity(0, FLOAT_AMPLITUDE* (floatingDownwards ? -1 : 1));
+			//floatTargetPosition.y += FLOAT_AMPLITUDE * (floatingDownwards ? -1 : 1);
+		} else {
+			body.setLinearVelocity(body.getLinearVelocity().scl(0.98f));
 		}
-		position.lerp(floatTargetPosition, (float)deltaTime);
+		//position.lerp(floatTargetPosition, (float)deltaTime);
 	}
 }
